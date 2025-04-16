@@ -1,1 +1,0 @@
-# ikinci deneme
