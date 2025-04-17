@@ -12,7 +12,7 @@ from pipeline import run_pipeline
 load_dotenv()
 SERPAPI_API_KEY = os.getenv("SERPAPI_API_KEY")
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "qwen2:1.5b"
+OLLAMA_MODEL = "qwen2.5:1.5b"
 
 DATA_DIR = Path("data")
 VALID_URLS_FILE = DATA_DIR / "valid_urls.json"
@@ -20,6 +20,9 @@ ERRORS_FILE = DATA_DIR / "errors.json"
 RESULTS_FILE = DATA_DIR / "results.json"
 
 def serpapi_search_urls(industry, state, num_results=10):
+
+    print("🔑 Loaded SERPAPI_API_KEY:", SERPAPI_API_KEY)
+
     query = f"{industry} companies in {state} site:.com"
     params = {
         "engine": "google",
@@ -41,6 +44,18 @@ def serpapi_search_urls(industry, state, num_results=10):
     return urls
 
 def check_url_status(url):
+    # First, make sure the URL is reachable
+    try:
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        if response.status_code != 200:
+            return False, f"HTTP {response.status_code}"
+    except Exception as e:
+        return False, f"URL unreachable: {str(e)}"
+
+    # Then verify with LLM if the URL belongs to a valid company
     prompt = f"""
 Below is a Google search result:
 
