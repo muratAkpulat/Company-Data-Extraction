@@ -1,8 +1,8 @@
 # pipeline.py
 
 import json
-from scraper.fetch_and_clean import fetch_and_clean
-from llm.extract_info import extract_company_info
+from fetch_and_clean import fetch_and_clean
+from extract_info import extract_company_info
 from pathlib import Path
 
 DATA_DIR = Path("data")

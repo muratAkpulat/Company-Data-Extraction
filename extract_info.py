@@ -106,7 +106,7 @@ def extract_company_info(text: str) -> dict:
 
 # Test manually if run as script
 if __name__ == "__main__":
-    from scraper.fetch_and_clean import fetch_and_clean
+    from fetch_and_clean import fetch_and_clean
 
     test_url = "https://www.americanplasticmolds.com/"
     cleaned_text = fetch_and_clean(test_url)

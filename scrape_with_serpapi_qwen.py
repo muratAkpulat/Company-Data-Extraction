@@ -20,6 +20,7 @@ def search_google(industry: str, state: str, num: int = 10):
         "num": num
     }
     res = requests.get("https://serpapi.com/search", params=params)
+    print("🌐 Raw SerpAPI response:", res.status_code, res.text[:200])
     results = res.json().get("organic_results", [])
     return results
 
