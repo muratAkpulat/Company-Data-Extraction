@@ -47,9 +47,11 @@ def check_url_status(url):
     # First, make sure the URL is reachable
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Referer": "https://www.google.com"
         }
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers=headers, timeout=20)
         if response.status_code != 200:
             return False, f"HTTP {response.status_code}"
     except Exception as e:
@@ -57,14 +59,14 @@ def check_url_status(url):
 
     # Then verify with LLM if the URL belongs to a valid company
     prompt = f"""
-Below is a Google search result:
+Below is a company website URL: {url}
 
-Link: {url}
-
-Is this the official website of a real company in the correct industry? If yes, return the valid URL in this format:
+Does this URL belong to a legitimate company in the target industry? If yes, return:
 {{"valid_url": "{url}"}}
 If not, return:
 {{"valid_url": null}}
+
+Be flexible: if the URL includes relevant keywords like 'sports', 'facilities', 'partners', consider it likely valid unless clearly unrelated.
 """
 
     try:
@@ -87,6 +89,7 @@ If not, return:
 
     except Exception as e:
         return False, str(e)
+
 
 def search_and_process(industry, state):
     DATA_DIR.mkdir(exist_ok=True)

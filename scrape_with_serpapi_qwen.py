@@ -12,7 +12,9 @@ OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "qwen2.5:1.5b"
 
 def search_google(industry: str, state: str, num: int = 10):
-    query = f"{industry} companies in {state} site:.com"
+    
+    query = f"{industry} manufacturers in {state} site:thomasnet.com"
+
     params = {
         "engine": "google",
         "q": query,
